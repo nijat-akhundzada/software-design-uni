@@ -7,3 +7,4 @@
 
 - --------------------------
 - https://www.kaggle.com/datasets/hasibalmuzdadid/global-air-pollution-dataset
+- https://www.kaggle.com/datasets/rupakroy/lstm-datasets-multivariate-univariate
