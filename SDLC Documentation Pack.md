@@ -236,4 +236,3 @@ flowchart TD
 
 ---
 
-**This template is ready to render as PDF or host in Markdown documentation platforms**, giving a **fully SDLC-compliant, professional project documentation pack**.
