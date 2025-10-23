@@ -2,3 +2,5 @@
 - https://data.worldbank.org/indicator?tab=featured
 - https://www.kaggle.com/datasets?search=weather
 - https://www.kaggle.com/datasets?search=air+pollution
+- https://huggingface.co/datasets?sort=trending&search=air+pollution
+- https://huggingface.co/datasets?sort=trending&search=weather
