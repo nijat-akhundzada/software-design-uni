@@ -4,3 +4,6 @@
 - https://www.kaggle.com/datasets?search=air+pollution
 - https://huggingface.co/datasets?sort=trending&search=air+pollution
 - https://huggingface.co/datasets?sort=trending&search=weather
+
+- --------------------------
+- https://www.kaggle.com/datasets/hasibalmuzdadid/global-air-pollution-dataset
