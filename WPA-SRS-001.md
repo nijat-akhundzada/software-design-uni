@@ -44,6 +44,10 @@ The web app will support **user authentication**, **role-based administration**,
 - FastAPI Documentation: [https://fastapi.tiangolo.com](https://fastapi.tiangolo.com)
 - React + TailwindCSS Guidelines: [https://reactjs.org](https://reactjs.org), [https://tailwindcss.com](https://tailwindcss.com)
 - AQI Data Sources: OpenAQ, World Air Quality Index Project
+- World Bank Group: [https://data.worldbank.org/indicator?tab=featured](https://data.worldbank.org/indicator?tab=featured)
+- Kaggle (Global Air Pollution Dataset): [https://www.kaggle.com/datasets/hasibalmuzdadid/global-air-pollution-dataset](https://www.kaggle.com/datasets/hasibalmuzdadid/global-air-pollution-dataset)
+- Kaggle (Air Pollution Forecasting - LSTM Multivariate): [https://www.kaggle.com/datasets/rupakroy/lstm-datasets-multivariate-univariate](https://www.kaggle.com/datasets/rupakroy/lstm-datasets-multivariate-univariate)
+- World Bank Group (Indicators Collection): [data.csv](transformed_data.csv)
 
 ---
 

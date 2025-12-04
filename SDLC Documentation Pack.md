@@ -37,7 +37,7 @@
 - Alerts & recommendations
 - Admin management & ML model maintenance
 
-> Full CRD: See `WPA-CRD-002`
+> Full CRD: See [`WPA-CRD-002`](./WPA-CRD-002.md)
 
 ---
 
@@ -72,6 +72,8 @@
 - Fully responsive (mobile/desktop)
 - Security: HTTPS, bcrypt, JWT, RBAC
 - Accessibility: WCAG 2.1 Level AA
+
+> Full SRS: See [`WPA-SRS-001`](./WPA-SRS-001.md)
 
 ---
 
@@ -143,6 +145,8 @@ flowchart TD
 
 ## 5. High-Level System Architecture
 
+**5.1. Component Interaction Diagram**
+
 ```mermaid
 flowchart LR
     Browser["React + Tailwind Frontend"] -->|HTTP/HTTPS| API["FastAPI Backend"]
@@ -151,6 +155,114 @@ flowchart LR
     API --> ML["ML Prediction Model (TensorFlow/Scikit-learn)"]
     API --> ExtAPI["External AQI/Weather APIs"]
     ML --> API
+```
+
+**5.2. User Login and Dashboard Data Flow**
+
+```mermaid
+
+flowchart TD
+    %% Start
+    A([Start]) --> B[Open Login Page]
+
+    %% User enters credentials
+    B --> C[Enter Email & Password]
+    C --> D[Click Login]
+
+    %% Backend validation
+    D --> E[FastAPI Auth API: Validate Input]
+    E --> F{Credentials Valid?}
+
+    %% Invalid case
+    F -- No --> G[Show Error Message]
+    G --> C
+
+    %% Valid case
+    F -- Yes --> H[Generate JWT Token]
+    H --> I[Store Session / JWT in Browser]
+    I --> J[Redirect to Dashboard]
+
+    %% Dashboard Loading process
+    J --> K[React loads user profile & preferences]
+    K --> L[Request Favorite Locations]
+    L --> M[FastAPI fetches AQI/Weather for each location]
+
+    %% Caching logic
+    M --> N{Cache Hit?}
+    N -- Yes --> O[Return Cached Data]
+    N -- No --> P[Fetch Live Data + ML Predictions]
+    P --> Q[Store Results in DB & Redis Cache]
+
+    %% Render UI
+    O --> R[Render Dashboard Components]
+    Q --> R
+
+    R --> S([End])
+```
+
+**5.3. System Sequence Diagram**
+
+```mermaid
+sequenceDiagram
+    title System Sequence Diagram
+    autonumber
+    actor U as User
+    participant FE as React Frontend
+    participant API as FastAPI Backend
+    participant RC as Redis Cache
+    participant EXT as External Weather API
+    participant ML as ML Model Service
+    participant DB as PostgreSQL DB
+
+    Note over U, FE: TC-Loc-01: User selects a city
+
+    U->>FE: Selects City (e.g., "Baku")
+    FE->>API: GET /api/v1/weather?city=Baku
+
+    %% Caching Strategy
+    rect rgb(240, 248, 255)
+        Note right of API: Caching Strategy (Performance)
+        API->>RC: Check Cache for "Baku_Data"
+        RC-->>API: Return Result (Hit/Miss)
+    end
+
+    alt Cache Hit (Data Exists & Fresh)
+        API-->>FE: Return Cached AQI & Forecast
+
+    else Cache Miss (Data Missing or Stale)
+        par Fetch Live Data
+            API->>EXT: Request Real-time AQI/Weather
+            EXT-->>API: Return JSON Data
+        and Get Prediction
+            Note right of API: F-3.1 Forecasting
+            API->>ML: Send Current Metrics
+            ML-->>API: Return Predicted AQI
+        end
+
+        %% Data Persistence
+        API->>DB: INSERT into AQI_DATA & FORECAST_DATA
+        DB-->>API: Confirm Write
+
+        %% Update Cache
+        API->>RC: SET "Baku_Data" (Expire: 10 mins)
+
+        API-->>FE: Return Fresh AQI & Forecast JSON
+    end
+
+    %% UI Rendering
+    FE->>FE: Render Charts (Chart.js) & Maps
+    FE-->>U: Display Dashboard
+
+    %% Async Alert Check
+    rect rgb(255, 240, 240)
+        Note over API, DB: Background Process: F-4.2 Health Alerts
+        API->>DB: Check User Alert Thresholds
+        alt Threshold Exceeded
+            API->>U: Send Email Notification
+        end
+    end
+
+
 ```
 
 ---
@@ -235,4 +347,3 @@ flowchart TD
 - Monitoring ensures uptime, API health, and alert delivery
 
 ---
-
