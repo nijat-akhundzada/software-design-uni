@@ -85,7 +85,7 @@
 | ------ | ------------------- | --------------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
 | F-1.1  | User Authentication | Registration/Login    | TC-Auth-01: Register <br> TC-Auth-02: Login <br> TC-Auth-03: JWT expiry                                   | FastAPI Auth API, PostgreSQL users table |
 | F-1.2  | Dashboard           | Dashboard UI          | TC-Dash-01: Display metrics <br> TC-Dash-02: Responsive layout                                            | React + Tailwind, FastAPI endpoints      |
-| F-2.1  | Location Management | Location CRUD         | TC-Loc-01: Add city <br> TC-Loc-02: Edit/Delete <br> TC-Loc-03: Device location                           | Frontend + PostgreSQL + FastAPI          |
+| F-2.1  | Location Management | Location CRUD         | TC-Loc-01: Add city <br> TC-Loc-02: Edit/Delete <br> TC-Loc-03: Device location                           | React + FastAPI + PostgreSQL + Redis     |
 | F-2.2  | Real-Time Data      | Data Fetching         | TC-Data-01: Fetch data <br> TC-Data-02: Validate API                                                      | FastAPI + Redis                          |
 | F-2.3  | Pollutant Breakdown | Data Processing       | TC-Poll-01: Compute pollutant severity <br> TC-Poll-02: Color-coded indicators                            | FastAPI Processing Module                |
 | F-3.1  | Forecasting         | ML Prediction         | TC-ML-01: Predict AQI <br> TC-ML-02: Validate accuracy                                                    | FastAPI ML API, TensorFlow/Scikit-learn  |
@@ -120,7 +120,7 @@ flowchart TD
     subgraph USER[User Features]
         UA[User Authentication] --> TC1[TC-Auth-01..03] --> DC1[FastAPI Auth API + PostgreSQL]
         Dash[Dashboard] --> TC2[TC-Dash-01..02] --> DC2[React + Tailwind + FastAPI]
-        Loc[Location Management] --> TC3[TC-Loc-01..03] --> DC3[Frontend + PostgreSQL/Redis]
+        Loc[Location Management] --> TC3[TC-Loc-01..03] --> DC3[React + FastAPI + PostgreSQL + Redis]
         RT[Real-Time Data] --> TC4[TC-Data-01..02] --> DC4[FastAPI + Redis]
         PB[Pollutant Breakdown] --> TC5[TC-Poll-01..02] --> DC5[FastAPI Processing]
         FC[Forecasting] --> TC6[TC-ML-01..02] --> DC6[FastAPI ML API]
