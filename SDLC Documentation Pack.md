@@ -1,8 +1,8 @@
 # Weather Pollution Analyzer & Predictor Web Application (WPA WebApp)
 
 **SDLC Documentation Pack**
-**Version:** 1.0
-**Date:** 2025-10-16
+**Version:** 1.1
+**Date:** 2025-10-17
 
 ---
 
@@ -15,7 +15,10 @@
 5. [High-Level System Architecture](#system-architecture)
 6. [Database Schema Overview](#database-schema)
 7. [UML Class Diagrams](#uml-class-diagrams)
-8. [Deployment & CI/CD Pipeline](#deployment-ci-cd)
+8. [Development Roadmap](#development-roadmap)
+9. [API Endpoint Documentation](#api-endpoint-documentation)
+10. [Testing Strategy](#testing-strategy)
+11. [Deployment & CI/CD Pipeline](#deployment-ci-cd)
 
 ---
 
@@ -465,9 +468,95 @@ classDiagram
 
 ---
 
+<a name="development-roadmap"></a>
+
+## 8. Development Roadmap
+
+This section outlines a high-level, phased roadmap for the development of the WPA WebApp.
+
+### Phase 1: Minimum Viable Product (MVP)
+The goal of this phase is to deliver the core functionality that allows users to get immediate value from the application.
+- **User Authentication:** Secure user registration and login (F-1.1, F-1.2).
+- **Personalized Dashboard:** A simple dashboard displaying real-time weather and AQI data for a user's primary location (F-1.3).
+- **Real-Time Data & Forecasting:** Integration with external APIs to fetch and display live data and a 5-7 day forecast (F-2.2, F-3.1).
+- **Interactive Map:** A map view showing AQI data for the surrounding area (F-4.1).
+
+### Phase 2: V1.1 Release
+This phase focuses on enhancing user customization and data interaction features.
+- **Location Management:** Allow users to add, edit, and delete multiple favorite locations (F-2.1).
+- **Interactive Charts & Historical Trends:** Introduce dynamic charts for exploring historical data (F-3.2, F-3.3).
+- **City Comparison:** A tool for users to compare AQI and weather metrics between two or more cities (F-3.4).
+- **Pollutant Breakdown:** Detailed view of pollutant levels and their severity (F-2.3).
+
+### Phase 3: V1.2 Release
+This phase introduces proactive features and administrative controls.
+- **Health Alerts:** A system for sending automated email or in-app notifications based on user-defined AQI thresholds (F-4.2).
+- **Personalized Recommendations:** A rule-based engine to provide health and activity advice (F-4.3).
+- **Admin Panel:** A secure interface for administrators to manage users and view system logs (F-5.1).
+
+### Future Enhancements (Post-V1.2)
+- **Advanced ML Model Maintenance:** Tools for admins to trigger model retraining and deployment (F-5.2).
+- **Enhanced User Preferences:** More granular control over notifications, themes, and data display.
+- **Data Export:** Allow users, particularly researchers, to export historical data.
+
+---
+
+<a name="api-endpoint-documentation"></a>
+
+## 9. API Endpoint Documentation
+
+The following is a preliminary specification for the WPA WebApp's RESTful API.
+
+| Endpoint                             | Method | Description                                     | Request Body (JSON)                        | Success Response (200 OK)                               |
+| ------------------------------------ | ------ | ----------------------------------------------- | ------------------------------------------ | ------------------------------------------------------- |
+| `/api/v1/auth/register`              | POST   | Register a new user.                            | `{ "email": "...", "password": "..." }`    | `{ "user_id": 1, "email": "..." }`                      |
+| `/api/v1/auth/login`                 | POST   | Authenticate a user and receive a JWT.          | `{ "email": "...", "password": "..." }`    | `{ "access_token": "...", "token_type": "bearer" }`     |
+| `/api/v1/users/me`                   | GET    | Get the current authenticated user's profile.   | (None)                                     | `{ "user_id": 1, "email": "...", "preferences": {} }`   |
+| `/api/v1/locations`                  | GET    | Get a list of the user's saved locations.       | (None)                                     | `[{ "id": 1, "city": "Baku" }, ...]`                     |
+| `/api/v1/locations`                  | POST   | Add a new location to the user's favorites.     | `{ "city": "Baku", "coordinates": "..." }` | `{ "id": 1, "city": "Baku" }`                           |
+| `/api/v1/locations/{id}`             | DELETE | Remove a location from the user's favorites.    | (None)                                     | `{ "status": "success" }`                               |
+| `/api/v1/data/realtime`              | GET    | Get real-time AQI and weather for a city.       | `?city=Baku` (Query Param)                 | `{ "city": "Baku", "aqi": 75, "temperature": 25, ... }` |
+| `/api/v1/data/forecast`              | GET    | Get the 7-day forecast for a city.              | `?city=Baku` (Query Param)                 | `[{ "date": "...", "predicted_aqi": 80 }, ...]`          |
+| `/api/v1/data/historical`            | GET    | Get historical data for a city.                 | `?city=Baku&range=30d` (Query Param)     | `[{ "timestamp": "...", "aqi": 70 }, ...]`              |
+| `/api/v1/alerts`                     | POST   | Create a new alert threshold for a location.    | `{ "location_id": 1, "threshold": 100 }` | `{ "id": 1, "threshold": 100 }`                        |
+| `/api/v1/alerts/{id}`                | DELETE | Delete a user's alert.                          | (None)                                     | `{ "status": "success" }`                               |
+| `/api/v1/admin/users`                | GET    | **[Admin]** Get a list of all users.            | (None)                                     | `[{ "user_id": 1, "email": "..." }, ...]`                |
+| `/api/v1/admin/models/retrain`       | POST   | **[Admin]** Trigger the ML model retraining.    | `{}`                                       | `{ "status": "retraining_started" }`                    |
+
+---
+
+<a name="testing-strategy"></a>
+
+## 10. Testing Strategy
+
+A multi-layered testing strategy will be employed to ensure application quality, reliability, and performance.
+
+### 10.1 Unit Testing
+- **Backend (Python/FastAPI):** Unit tests will be written using the `pytest` framework. Key business logic, utility functions, and individual API endpoint logic (without external dependencies) will be tested. Test coverage will be monitored.
+- **Frontend (React):** Components will be tested using `Jest` and `React Testing Library`. Tests will verify that components render correctly, manage their state, and handle user interactions as expected.
+
+### 10.2 Integration Testing
+- Integration tests will focus on the interaction between different parts of the system. This includes testing the full request/response cycle from the FastAPI backend to the PostgreSQL database and Redis cache.
+- The connection and data transformation from external AQI/Weather APIs will also be covered.
+
+### 10.3 End-to-End (E2E) Testing
+- E2E tests will simulate real user workflows in a production-like environment.
+- A framework like `Cypress` or `Playwright` will be used to write scripts that perform actions such as user registration, logging in, adding a location, and verifying that the dashboard displays the correct data.
+
+### 10.4 Performance & Load Testing
+- To ensure compliance with non-functional requirements (P-1, P-3), performance testing will be conducted using tools like `JMeter` or `Locust`.
+- Scenarios will be created to simulate up to 10,000 concurrent users to test API response times, database performance, and system scalability.
+
+### 10.5 Security Testing
+- **Vulnerability Scanning:** Automated tools will be used to scan for common vulnerabilities (e.g., OWASP Top 10) and outdated dependencies.
+- **Penetration Testing:** Manual or automated penetration testing will be performed to identify potential security holes in the authentication system, API, and infrastructure.
+- **Code Review:** All code will be peer-reviewed with a focus on security best practices.
+
+---
+
 <a name="deployment-ci-cd"></a>
 
-## 8. Deployment & CI/CD Pipeline
+## 11. Deployment & CI/CD Pipeline
 
 ```mermaid
 flowchart TD
