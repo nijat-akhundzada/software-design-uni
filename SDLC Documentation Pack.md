@@ -14,7 +14,8 @@
 4. [Visual SDLC Traceability Diagram](#traceability-diagram)
 5. [High-Level System Architecture](#system-architecture)
 6. [Database Schema Overview](#database-schema)
-7. [Deployment & CI/CD Pipeline](#deployment-ci-cd)
+7. [UML Class Diagrams](#uml-class-diagrams)
+8. [Deployment & CI/CD Pipeline](#deployment-ci-cd)
 
 ---
 
@@ -323,9 +324,150 @@ erDiagram
 
 ---
 
+<a name="uml-class-diagrams"></a>
+
+## 7. UML Class Diagrams
+
+This document contains the UML class diagrams for the Weather Pollution Analyzer & Predictor Web Application (WPA WebApp).
+
+### Domain Model Class Diagram
+
+This diagram illustrates the main entities of the system and their relationships.
+
+```mermaid
+classDiagram
+    class User {
+        +id: int
+        +email: string
+        +password_hash: string
+        +preferences: json
+        +created_at: timestamp
+        +register()
+        +login()
+        +logout()
+        +addLocation()
+        +removeLocation()
+        +createAlert()
+        +viewDashboard()
+    }
+
+    class Admin {
+        +manageUsers()
+        +viewLogs()
+        +retrainModel()
+    }
+
+    class Location {
+        +id: int
+        +user_id: int
+        +city: string
+        +coordinates: string
+        +created_at: timestamp
+        +getRealTimeData()
+        +getForecast()
+    }
+
+    class Alert {
+        +id: int
+        +user_id: int
+        +location_id: int
+        +threshold: int
+        +notification_type: string
+        +checkThreshold()
+        +sendNotification()
+    }
+
+    class AQIData {
+        +id: int
+        +city: string
+        +timestamp: timestamp
+        +pm25: float
+        +pm10: float
+        +o3: float
+        +co: float
+        +no2: float
+        +aqi: int
+        +temperature: float
+        +humidity: float
+    }
+
+    class ForecastData {
+        +id: int
+        +city: string
+        +forecast_date: date
+        +predicted_aqi: int
+        +predicted_weather: string
+    }
+
+    User <|-- Admin
+    User "1" -- "0..*" Location : has
+    User "1" -- "0..*" Alert : subscribes to
+    Location "1" -- "0..*" AQIData : contains
+    Location "1" -- "0..*" ForecastData : has
+    Alert "1" -- "1" Location : for
+
+```
+
+### System Components and Services Diagram
+
+This diagram shows the high-level components and services of the application and their interactions.
+
+```mermaid
+classDiagram
+    class Frontend {
+        +React
+        +TailwindCSS
+        +Chart.js / D3.js
+        +Leaflet.js / Mapbox
+        +renderDashboard()
+        +renderCharts()
+        +renderMap()
+    }
+
+    class Backend {
+        +FastAPI
+        +handleRequest()
+        +authenticateUser()
+        +getRealTimeData()
+        +getForecast()
+    }
+
+    class DataFetcher {
+        +fetchFromExternalAPI()
+    }
+
+    class MLModel {
+        +TensorFlow / Scikit-learn
+        +predictAQI()
+        +predictWeather()
+        +retrain()
+    }
+
+    class NotificationService {
+        +sendEmail()
+        +sendInAppNotification()
+    }
+
+    class Database {
+        +PostgreSQL
+        +Redis (Cache)
+        +saveUser()
+        +getAQIData()
+        +cacheData()
+    }
+
+    Frontend -- Backend : Interacts via HTTP/HTTPS
+    Backend -- Database : Reads/Writes
+    Backend -- DataFetcher : Fetches data
+    Backend -- MLModel : Gets predictions
+    Backend -- NotificationService : Sends alerts
+```
+
+---
+
 <a name="deployment-ci-cd"></a>
 
-## 7. Deployment & CI/CD Pipeline
+## 8. Deployment & CI/CD Pipeline
 
 ```mermaid
 flowchart TD
