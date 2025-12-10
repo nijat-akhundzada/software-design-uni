@@ -231,5 +231,3 @@ flowchart LR
 - UI wireframes and mockups
 
 ---
-
-**End of SRS Document**

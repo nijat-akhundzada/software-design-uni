@@ -96,10 +96,9 @@ Functional requirements are presented as **User Stories**, reflecting user goals
 
 ## 4. Document Control
 
-| **Version** | **Date**   | **Description**                               | **Author**      |
-| :---------- | :--------- | :-------------------------------------------- | :-------------- |
-| 1.0         | 2025-10-16 | Initial Enhanced WebApp Version (Final Draft) | Project Analyst |
+| **Version** | **Date**   | **Description**                               |
+| :---------- | :--------- | :-------------------------------------------- |
+| 1.0         | 2025-10-16 | Initial Enhanced WebApp Version (Final Draft) |
 
 ---
 
-**End of Document**
